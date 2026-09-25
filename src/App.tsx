@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { Toaster } from 'sonner';
 
-import { WelcomeScreen } from './components/WelcomeScreen';
 import { InvitationContent } from './components/InvitationContent';
 import { Admin } from './components/Admin';
 import { INVITATION_IMAGE_URLS, preloadImages } from './utils/preloadImages';
@@ -10,10 +9,11 @@ import { INVITATION_IMAGE_URLS, preloadImages } from './utils/preloadImages';
 const isAdminRoute = () => window.location.pathname === '/admin';
 
 export default function App() {
-  const [showInvitation, setShowInvitation] = useState(false);
+  const [appState, setAppState] = useState<'initial' | 'playing' | 'invitation'>('initial');
   const [assetsReady, setAssetsReady] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const params = new URLSearchParams(window.location.search);
   const titleParam = params.get('title') || '';
@@ -21,25 +21,21 @@ export default function App() {
   const eventParam = params.get('event') || 'both';
 
   const fullInviteeName = `${titleParam} ${nameParam}`.trim();
-
   let eventLabel = 'Our Wedding Celebration';
-
   const weddingDate = new Date('2026-12-10T16:00:00');
 
   useEffect(() => {
     if (isAdminRoute()) return;
 
     let cancelled = false;
-
     preloadImages([...INVITATION_IMAGE_URLS]).then(() => {
       if (!cancelled) setAssetsReady(true);
     });
-    
-    // Preload video
+
     const videoLink = document.createElement('link');
     videoLink.rel = 'preload';
     videoLink.as = 'video';
-    videoLink.href = '/intro.mp4';
+    videoLink.href = '/gemini_generated_video_13ad019c.mp4';
     document.head.appendChild(videoLink);
 
     return () => {
@@ -82,11 +78,20 @@ export default function App() {
     setIsMusicPlaying((playing) => !playing);
   }, [ensureAudio, isMusicPlaying]);
 
-  const handleEnvelopeComplete = useCallback(() => {
-    requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-      setShowInvitation(true);
-    });
+  const handleStartVideo = useCallback(() => {
+    if (appState !== 'initial') return;
+    setAppState('playing');
+    handleMusicStart();
+    if (videoRef.current) {
+      videoRef.current.muted = false; // ensure it's unmuted
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(console.error);
+    }
+  }, [appState, handleMusicStart]);
+
+  const handleTransitionVideoEnd = useCallback(() => {
+    setAppState('invitation');
+    window.scrollTo(0, 0);
   }, []);
 
   if (isAdminRoute()) {
@@ -103,7 +108,7 @@ export default function App() {
       <Toaster position="top-center" />
 
       <InvitationContent
-        active={showInvitation}
+        active={appState === 'invitation'}
         eventParam={eventParam}
         fullInviteeName={fullInviteeName}
         eventLabel={eventLabel}
@@ -112,19 +117,38 @@ export default function App() {
         onToggleMusic={toggleMusic}
       />
 
-      <AnimatePresence mode="wait">
-        {!showInvitation && (
-          <WelcomeScreen
-            key="welcome"
-            onComplete={handleEnvelopeComplete}
-            onMusicStart={handleMusicStart}
-            readyToTransition={assetsReady}
-          />
+      <AnimatePresence>
+        {appState !== 'invitation' && (
+          <motion.div
+            key="intro-video"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            className="fixed inset-0 z-[100] bg-black flex items-center justify-center cursor-pointer"
+            onClick={appState === 'initial' ? handleStartVideo : undefined}
+          >
+            <video
+              ref={videoRef}
+              src="/gemini_generated_video_13ad019c.mp4"
+              className="w-full h-full object-cover"
+              muted={appState === 'initial'}
+              playsInline
+              onEnded={handleTransitionVideoEnd}
+            />
+            {appState === 'playing' && (
+              <button
+                className="absolute bottom-6 right-6 text-white/50 hover:text-white px-4 py-2 rounded-full bg-white/10 backdrop-blur-md transition-colors z-50 text-sm font-sans"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTransitionVideoEnd();
+                }}
+              >
+                Skip Video
+              </button>
+            )}
+          </motion.div>
         )}
       </AnimatePresence>
-      
-      {/* Hidden video to force preload across all devices */}
-      <video src="/intro.mp4" preload="auto" muted playsInline style={{ display: 'none' }} />
     </>
   );
 }
