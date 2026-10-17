@@ -47,7 +47,7 @@ export const Timeline = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center mb-16 flex flex-col items-center"
         >
-          <h2 className="text-4xl sm:text-5xl font-names text-[#2A2416] tracking-wide mb-2">The Day</h2>
+          <h2 className="text-4xl sm:text-5xl font-display text-[#2A2416] mb-2">The Day</h2>
         </motion.div>
 
         {/* Timeline */}
@@ -63,7 +63,7 @@ export const Timeline = () => {
             >
               {/* Time */}
               <div className="w-16 sm:w-20 flex-shrink-0 pt-1 text-right">
-                <span className="font-['Cormorant_Garamond',_serif] text-sm sm:text-base text-[#8B6508] tracking-widest tabular-nums font-semibold">
+                <span className="font-serif text-sm sm:text-base text-[#8B6508] tracking-widest tabular-nums font-semibold">
                   {event.time}
                 </span>
               </div>
@@ -80,7 +80,7 @@ export const Timeline = () => {
 
               {/* Content */}
               <div className="flex-1 pb-2">
-                <h3 className="font-['Cormorant_Garamond',_serif] text-xl sm:text-2xl text-[#2A2416] mb-1 font-medium">{event.title}</h3>
+                <h3 className="font-serif text-xl sm:text-2xl text-[#2A2416] mb-1 font-medium">{event.title}</h3>
                 <p className="text-[11px] sm:text-xs text-[#8B6508]/70 font-sans tracking-wide">{event.desc}</p>
               </div>
             </motion.div>

@@ -38,7 +38,7 @@ export const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="uppercase tracking-[0.4em] text-[10px] sm:text-xs font-semibold mb-4 text-[#8B6508] text-center font-['Georgia',_serif]"
+          className="uppercase tracking-[0.4em] text-[10px] sm:text-xs font-semibold mb-4 text-[#8B6508] text-center font-serif"
         >
           The countdown
         </motion.span>
@@ -48,7 +48,7 @@ export const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-['Pinyon_Script',_cursive] text-5xl sm:text-6xl md:text-7xl mb-16 sm:mb-20 text-center text-[#2A2416]"
+          className="font-display text-5xl sm:text-6xl md:text-7xl mb-16 sm:mb-20 text-center text-[#2A2416]"
         >
           Forever begins in
         </motion.h2>
@@ -68,11 +68,11 @@ export const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
           ].map((item) => (
             <div key={item.label} className="flex flex-col items-center">
               <div className="w-20 h-24 sm:w-28 sm:h-32 bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_30px_rgba(212,175,55,0.15)] flex items-center justify-center mb-4 sm:mb-5 border border-[#D4AF37]/10">
-                <span className="font-['Cormorant_Garamond',_serif] text-4xl sm:text-6xl font-medium text-[#2A2416] tabular-nums">
+                <span className="font-serif text-4xl sm:text-6xl font-medium text-[#2A2416] tabular-nums">
                   {String(item.value).padStart(2, '0')}
                 </span>
               </div>
-              <span className="font-['Cormorant_Garamond',_serif] text-[9px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold text-[#8B6508]">
+              <span className="font-serif text-[9px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold text-[#8B6508]">
                 {item.label}
               </span>
             </div>
@@ -80,19 +80,6 @@ export const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
         </motion.div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="mt-12 sm:mt-16 w-full max-w-sm mx-auto relative z-10 px-4"
-      >
-        <img 
-          src="/ChatGPT Image Sep 3, 2026, 03_30_18 AM.png" 
-          alt="Illustration" 
-          className="w-full h-auto mix-blend-multiply opacity-90"
-        />
-      </motion.div>
 
     </div>
   );

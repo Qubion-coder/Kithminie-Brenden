@@ -65,12 +65,8 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
           We Are Getting Married
         </h3>
         
-        <div className="font-serif text-5xl sm:text-6xl text-stone-600 mb-6 font-medium leading-none tracking-tight" style={{ fontFamily: '"Cinzel Decorative", serif' }}>
-          KB
-        </div>
-        
-        <h1 className="font-display text-5xl sm:text-7xl text-stone-600 mb-10" style={{ fontFamily: '"Great Vibes", cursive', transform: 'rotate(-2deg)' }}>
-          Kithminie & Brenden
+        <h1 className="font-couple text-5xl sm:text-7xl text-stone-600 mb-10 leading-snug">
+          Kithminie <span className="font-script text-brand-plum">&</span> Brenden
         </h1>
 
         <p className="font-serif text-xs sm:text-sm text-stone-800 max-w-sm tracking-[0.15em] leading-loose mb-10 uppercase font-semibold">

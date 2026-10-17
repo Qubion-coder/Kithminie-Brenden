@@ -4,10 +4,7 @@ import { Sparkles, Heart } from 'lucide-react';
 
 export const CoupleDetails: React.FC = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
-      {/* Decorative ambient background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-radial from-brand-lavender/15 to-transparent rounded-full blur-[100px] pointer-events-none z-0" />
-
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 relative font-serif">
       <div className="text-center mb-16 sm:mb-24 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -15,13 +12,18 @@ export const CoupleDetails: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 1 }}
         >
-          <div className="inline-flex items-center gap-4 mb-6 mt-4">
-            <div className="w-12 sm:w-20 h-[1px] bg-gradient-to-r from-transparent to-brand-plum/60" />
-            <span className="text-brand-plum uppercase tracking-[0.5em] text-[11px] font-semibold font-sans drop-shadow-sm">The Protagonists</span>
-            <div className="w-12 sm:w-20 h-[1px] bg-gradient-to-l from-transparent to-brand-plum/60" />
-          </div>
-          <h2 className="text-5xl sm:text-7xl font-names text-stone-800 tracking-tight drop-shadow-sm">
-            Kithminie <span className="text-brand-plum font-light mx-2">&</span> Brenden
+          <figure className="max-w-xl mx-auto mb-8 mt-4 px-4">
+            <blockquote className="font-serif italic text-lg sm:text-2xl leading-relaxed text-stone-700 drop-shadow-sm">
+              &ldquo;Set me as a seal upon your heart, a seal upon your arm, for love is strong as death&rdquo;
+            </blockquote>
+            <figcaption className="inline-flex items-center gap-4 mt-4">
+              <div className="w-12 sm:w-20 h-[1px] bg-gradient-to-r from-transparent to-brand-plum/60" />
+              <span className="text-brand-plum uppercase tracking-[0.4em] text-[10px] sm:text-[11px] font-semibold font-serif drop-shadow-sm">Song of Solomon</span>
+              <div className="w-12 sm:w-20 h-[1px] bg-gradient-to-l from-transparent to-brand-plum/60" />
+            </figcaption>
+          </figure>
+          <h2 className="text-5xl sm:text-7xl font-couple text-stone-800 leading-snug drop-shadow-sm">
+            Kithminie <span className="font-script text-brand-plum mx-2">&</span> Brenden
           </h2>
         </motion.div>
       </div>
@@ -35,18 +37,9 @@ export const CoupleDetails: React.FC = () => {
           transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
           className="text-center lg:text-right flex-1 lg:pr-10 order-4 lg:order-1 relative w-full"
         >
-          {/* Mobile Background Image attached only to this text section */}
-          <div className="absolute -top-60 sm:-top-72 inset-x-0 z-0 lg:hidden pointer-events-none flex justify-center items-center opacity-80 overflow-visible">
-            <img 
-              src="/ChatGPT Image Sep 3, 2026, 03_47_52 AM.png" 
-              alt="Mobile Background" 
-              className="w-full max-w-md scale-125 sm:scale-150 h-auto object-contain mix-blend-multiply"
-            />
-          </div>
-
           <div className="mb-4 flex flex-col items-center lg:items-end relative z-10">
             <span className="text-[#8B6508] uppercase tracking-[0.4em] text-[10px] font-bold mb-3 block">The Groom</span>
-            <h3 className="text-4xl sm:text-5xl font-['Cormorant_Garamond',_serif] text-stone-800 mb-2 drop-shadow-sm">Brenden</h3>
+            <h3 className="text-4xl sm:text-5xl font-serif text-stone-800 mb-2 drop-shadow-sm">Brenden</h3>
             <p className="text-stone-700 font-century text-xs mb-2"></p>
             <p className="text-stone-500/90 font-serif italic text-base sm:text-lg">Son of Mr & Mrs De Silva</p>
           </div>
@@ -65,8 +58,8 @@ export const CoupleDetails: React.FC = () => {
           className="text-center lg:text-left flex-1 lg:pl-10 order-2 lg:order-3"
         >
           <div className="mb-4 flex flex-col items-center lg:items-start">
-            <span className="text-[#8B6508] uppercase tracking-[0.4em] text-[10px] font-bold mb-3 block mt-28 sm:mt-36 lg:mt-0">The Bride</span>
-            <h3 className="text-4xl sm:text-5xl font-['Cormorant_Garamond',_serif] text-stone-800 mb-2 drop-shadow-sm">Kithminie</h3>
+            <span className="text-[#8B6508] uppercase tracking-[0.4em] text-[10px] font-bold mb-3 block">The Bride</span>
+            <h3 className="text-4xl sm:text-5xl font-serif text-stone-800 mb-2 drop-shadow-sm">Kithminie</h3>
             <p className="text-stone-700 font-century text-xs mb-2"></p>
             <p className="text-stone-500/90 font-serif italic text-base sm:text-lg">Daughter of Mr & Mrs Palihawadena</p>
           </div>

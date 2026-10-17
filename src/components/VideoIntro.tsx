@@ -62,7 +62,7 @@ export function VideoIntro({ onComplete, onMusicStart, readyToTransition = true 
           background: rgba(0, 0, 0, 0.4);
           color: white;
           cursor: pointer;
-          font-family: "Cormorant Garamond", serif;
+          font-family: var(--font-serif), serif;
           z-index: 10;
         }
         .play-button {
@@ -95,7 +95,7 @@ export function VideoIntro({ onComplete, onMusicStart, readyToTransition = true 
           border: 1px solid rgba(255, 255, 255, 0.3);
           border-radius: 4px;
           cursor: pointer;
-          font-family: "Montserrat", sans-serif;
+          font-family: var(--font-serif), serif;
           font-size: 12px;
           letter-spacing: 0.1em;
           text-transform: uppercase;

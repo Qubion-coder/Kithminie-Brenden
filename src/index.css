@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Great+Vibes&family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -7,12 +6,16 @@
   --color-brand-rose: #F4E6CE;
   --color-brand-blush: #FBF9F6; /* Pearl White */
 
+  /* Typography system: Ballet for the couple's names, Pinyon Script for
+     headings and accents, Cormorant Garamond for everything else. */
   --font-serif: "Cormorant Garamond", serif;
-  --font-display: "Great Vibes", cursive;
-  --font-names: "Cinzel Decorative", serif;
-  --font-century: "Century", "Century Schoolbook", serif;
-  --font-sans: "Inter", sans-serif;
-  --font-playfair: "Playfair Display", serif;
+  --font-sans: "Cormorant Garamond", serif;
+  --font-century: "Cormorant Garamond", serif;
+  --font-playfair: "Cormorant Garamond", serif;
+  --font-couple: "Ballet", cursive;
+  --font-names: "Ballet", cursive;
+  --font-display: "Pinyon Script", cursive;
+  --font-script: "Pinyon Script", cursive;
 }
 
 :root {

@@ -44,7 +44,7 @@ export function WelcomeScreen({ onComplete, onMusicStart, readyToTransition = tr
           font-size: 20px;
           cursor: pointer;
           border-radius: 4px;
-          font-family: "Cormorant Garamond", serif;
+          font-family: var(--font-serif), serif;
           transition: all 0.3s ease;
           backdrop-filter: blur(4px);
         }

@@ -69,7 +69,7 @@ export function EnvelopeOpening({
           background: radial-gradient(ellipse at 30% 20%, #ffffff 0%, #FDE6D5 40%, #C1D5C0 100%);
           perspective: 1500px;
           overflow: hidden;
-          font-family: "Cormorant Garamond", serif;
+          font-family: var(--font-serif), serif;
         }
 
         /* Ambient floating orbs */
@@ -193,8 +193,8 @@ export function EnvelopeOpening({
 
         /* Typography */
         .text-eyebrow {
-          font-family: 'Montserrat', sans-serif;
-          font-size: 10px;
+          font-family: var(--font-serif), serif;
+          font-size: 11px;
           letter-spacing: 0.45em;
           text-transform: uppercase;
           color: #b89645;
@@ -205,7 +205,7 @@ export function EnvelopeOpening({
         }
 
         .text-names {
-          font-family: var(--font-names), "Cinzel Decorative", serif;
+          font-family: var(--font-couple), cursive;
           font-size: 60px;
           line-height: 1.1;
           color: #4a3a4d;
@@ -218,7 +218,7 @@ export function EnvelopeOpening({
         }
         
         .text-ampersand {
-          font-family: "Great Vibes", cursive;
+          font-family: var(--font-script), cursive;
           font-size: 40px;
           display: block;
           margin: -2px 0;
@@ -227,7 +227,7 @@ export function EnvelopeOpening({
         }
 
         .text-details {
-          font-family: 'Montserrat', sans-serif;
+          font-family: var(--font-serif), serif;
           font-size: 9.5px;
           letter-spacing: 0.22em;
           text-transform: uppercase;
@@ -248,7 +248,7 @@ export function EnvelopeOpening({
         }
 
         .text-church {
-          font-family: "Cormorant Garamond", serif;
+          font-family: var(--font-serif), serif;
           font-size: 14px;
           font-style: italic;
           font-weight: 400;
@@ -346,7 +346,7 @@ export function EnvelopeOpening({
           left: 50%;
           transform: translateX(-50%);
           color: #b89645;
-          font-family: "Montserrat", sans-serif;
+          font-family: var(--font-serif), serif;
           font-size: 10px;
           letter-spacing: 0.35em;
           text-transform: uppercase;

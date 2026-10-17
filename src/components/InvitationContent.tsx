@@ -62,8 +62,7 @@ export function InvitationContent({
       )}
 
       <DeferredMount active={active} delay={120} minHeight="40vh">
-        <div className="py-24 sm:py-32 bg-gradient-to-b from-brand-blush via-white to-brand-blush relative overflow-hidden">
-
+        <div className="py-28 sm:py-36 px-10 sm:px-20 lg:px-32 bg-[#FBFAF7] bg-[url('/35582a9af3fc2b22af5804ce2756caca.jpg')] bg-[length:100%_100%] bg-no-repeat relative overflow-hidden">
           <CoupleDetails />
         </div>
       </DeferredMount>
@@ -91,7 +90,16 @@ export function InvitationContent({
       </DeferredMount>
 
       <DeferredMount active={active} delay={420} minHeight="30vh">
-        <div className="py-24 sm:py-32 bg-brand-blush relative overflow-hidden">
+        <div className="pb-24 sm:pb-32 bg-[#d5cfbf] relative overflow-hidden">
+          <video
+            src="/hero-bg-l-slFnvE.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            className="block w-full sm:max-w-md sm:mx-auto h-auto pointer-events-none mb-12 sm:mb-16"
+          />
           <RSVPForm inviteeName={fullInviteeName} eventName={eventLabel} eventParam={eventParam} />
         </div>
       </DeferredMount>
@@ -102,7 +110,7 @@ export function InvitationContent({
         <footer className="py-12 bg-white border-t border-brand-lavender/20 text-center relative overflow-hidden mt-10">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-lavender/10 blur-[80px] rounded-full pointer-events-none" />
           <Heart className="w-6 h-6 mx-auto mb-6 text-brand-plum fill-brand-lavender/20" />
-          <p className="font-names text-4xl sm:text-5xl text-stone-800 mb-2">Kithminie & Brenden</p>
+          <p className="font-couple text-4xl sm:text-5xl text-stone-800 mb-2 leading-snug">Kithminie <span className="font-script text-brand-plum">&</span> Brenden</p>
           <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-sans text-stone-400 font-semibold block mb-4">
             December 10, 2026
           </span>
