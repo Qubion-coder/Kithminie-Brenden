@@ -1,10 +1,49 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import React, { useRef, useState, useEffect, type Ref } from 'react';
+import { motion, useScroll, useTransform, type Variants } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 
 interface HeroProps {
   event?: string | null;
   inviteeName?: string;
+  /** True once the intro video has finished; the text animates in then. */
+  active?: boolean;
+  /** The intro video plays here as the hero background and stays on its last frame. */
+  videoRef?: Ref<HTMLVideoElement>;
+  videoMuted?: boolean;
+  onVideoEnd?: () => void;
+}
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.35, delayChildren: 0.6 } },
+};
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: 'easeOut' } },
+};
+
+const letters: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07 } },
+};
+
+const letter: Variants = {
+  hidden: { opacity: 0, y: 12, filter: 'blur(4px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.5, ease: 'easeOut' } },
+};
+
+/** Reveals text one letter at a time; must sit inside a variants parent. */
+function Letters({ text, className }: { text: string; className?: string }) {
+  return (
+    <motion.span variants={letters} className={className} aria-label={text}>
+      {Array.from(text).map((ch, i) => (
+        <motion.span key={i} variants={letter} aria-hidden="true" className="inline-block whitespace-pre">
+          {ch}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
 }
 
 function usePrefersReducedMotion() {
@@ -31,7 +70,7 @@ function useIsTouchDevice() {
   return touch;
 }
 
-export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
+export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active = true, videoRef, videoMuted = true, onVideoEnd }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const isTouch = useIsTouchDevice();
@@ -48,32 +87,47 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
         className="absolute inset-0 z-0 origin-center"
         style={useParallax ? { y: y1, scale } : undefined}
       >
-        <img
-          src="/ChatGPT Image Sep 25, 2026, 06_29_05 PM.png"
-          alt="Wedding Background"
+        {/* Intro video; when it ends it rests on its last frame behind the text */}
+        <video
+          ref={videoRef}
+          src="/gemini_generated_video_13ad019c.mp4"
           className="w-full h-full object-cover object-center"
+          muted={videoMuted}
+          playsInline
+          preload="auto"
+          onEnded={onVideoEnd}
         />
       </motion.div>
 
+      {/* Soft veil that fades in with the text to keep it readable */}
+      <motion.div
+        className="absolute inset-0 z-0 bg-gradient-to-b from-white/55 via-white/45 to-white/60 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: active ? 1 : 0 }}
+        transition={{ duration: 1.2, delay: 0.3 }}
+      />
+
       <motion.div 
         className="relative z-10 flex flex-col items-center justify-center text-center px-4 w-full h-full pt-12 pb-24"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
+        variants={container}
+        initial="hidden"
+        animate={active ? 'show' : 'hidden'}
       >
-        <h3 className="font-serif text-[12px] sm:text-sm tracking-[0.25em] uppercase text-stone-800 mb-6 font-medium">
+        <motion.h3 variants={item} className="font-serif text-[12px] sm:text-sm tracking-[0.25em] uppercase text-stone-800 mb-6 font-medium">
           We Are Getting Married
-        </h3>
+        </motion.h3>
         
-        <h1 className="font-couple text-5xl sm:text-7xl text-stone-600 mb-10 leading-snug">
-          Kithminie <span className="font-script text-brand-plum">&</span> Brenden
-        </h1>
+        <motion.h1 variants={letters} className="font-couple text-5xl sm:text-7xl text-stone-600 mb-10 leading-snug">
+          <Letters text="Kithminie " />
+          <motion.span variants={letter} className="inline-block font-script text-brand-plum">&</motion.span>
+          <Letters text=" Brenden" />
+        </motion.h1>
 
-        <p className="font-serif text-xs sm:text-sm text-stone-800 max-w-sm tracking-[0.15em] leading-loose mb-10 uppercase font-semibold">
+        <motion.p variants={item} className="font-serif text-xs sm:text-sm text-stone-800 max-w-sm tracking-[0.15em] leading-loose mb-10 uppercase font-semibold">
           We request the pleasure of your company<br/>to celebrate our wedding on
-        </p>
+        </motion.p>
 
-        <div className="flex items-center justify-center gap-6 mb-2">
+        <motion.div variants={item} className="flex items-center justify-center gap-6 mb-2">
           <div className="flex flex-col items-center border-t border-b border-stone-800 py-1.5 px-2">
             <span className="font-serif text-xs sm:text-sm tracking-[0.2em] uppercase font-bold">December</span>
           </div>
@@ -81,12 +135,12 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
           <div className="flex flex-col items-center border-t border-b border-stone-800 py-1.5 px-2">
             <span className="font-serif text-xs sm:text-sm tracking-[0.2em] uppercase font-bold">Wednesday</span>
           </div>
-        </div>
-        <div className="font-serif text-xl sm:text-2xl tracking-[0.25em] text-stone-800 mb-10 font-medium">
+        </motion.div>
+        <motion.div variants={item} className="font-serif text-xl sm:text-2xl tracking-[0.25em] text-stone-800 mb-10 font-medium">
           2026
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col items-center gap-8 mt-2">
+        <motion.div variants={item} className="flex flex-col items-center gap-8 mt-2">
           <div className="text-center">
             <h3 className="font-display text-4xl sm:text-5xl text-stone-600 mb-2" style={{ transform: 'rotate(-2deg)' }}>Holy Mass</h3>
             <p className="font-serif text-base sm:text-lg text-stone-800 font-medium tracking-wide">Time: 4:00 pm</p>
@@ -98,14 +152,14 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName }) => {
             <p className="font-serif text-base sm:text-lg text-stone-800 font-medium tracking-wide">Time: 7:00 pm</p>
             <p className="font-serif text-xl sm:text-2xl text-stone-700 tracking-wide mt-1">Venue: Barnhouse, Panadura</p>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
 
       <motion.div
         className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-30"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
+        animate={active ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+        transition={{ delay: 4, duration: 0.8 }}
         onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })}
       >
         <motion.div 

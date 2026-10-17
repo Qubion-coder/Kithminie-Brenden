@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { Toaster } from 'sonner';
 
 import { InvitationContent } from './components/InvitationContent';
@@ -94,6 +93,25 @@ export default function App() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Jump to the last frame so the hero rests on it, then reveal the text.
+  const handleSkipVideo = useCallback(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      if (Number.isFinite(video.duration)) video.currentTime = Math.max(0, video.duration - 0.05);
+    }
+    handleTransitionVideoEnd();
+  }, [handleTransitionVideoEnd]);
+
+  // Keep the page still until the intro video is done.
+  useEffect(() => {
+    if (isAdminRoute()) return;
+    document.body.style.overflow = appState === 'invitation' ? '' : 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [appState]);
+
   if (isAdminRoute()) {
     return (
       <>
@@ -115,40 +133,27 @@ export default function App() {
         weddingDate={weddingDate}
         isMusicPlaying={isMusicPlaying}
         onToggleMusic={toggleMusic}
+        introVideoRef={videoRef}
+        introMuted={appState === 'initial'}
+        onIntroEnd={handleTransitionVideoEnd}
       />
 
-      <AnimatePresence>
-        {appState !== 'invitation' && (
-          <motion.div
-            key="intro-video"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="fixed inset-0 z-[100] bg-black flex items-center justify-center cursor-pointer"
-            onClick={appState === 'initial' ? handleStartVideo : undefined}
-          >
-            <video
-              ref={videoRef}
-              src="/gemini_generated_video_13ad019c.mp4"
-              className="w-full h-full object-cover"
-              muted={appState === 'initial'}
-              playsInline
-              onEnded={handleTransitionVideoEnd}
-            />
-            {appState === 'playing' && (
-              <button
-                className="absolute bottom-6 right-6 text-white/50 hover:text-white px-4 py-2 rounded-full bg-white/10 backdrop-blur-md transition-colors z-50 text-sm font-sans"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleTransitionVideoEnd();
-                }}
-              >
-                Skip Video
-              </button>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {appState === 'initial' && (
+        <div
+          className="fixed inset-0 z-[100] cursor-pointer"
+          onClick={handleStartVideo}
+          aria-label="Start the invitation"
+        />
+      )}
+
+      {appState === 'playing' && (
+        <button
+          className="fixed bottom-6 right-6 text-white/70 hover:text-white px-4 py-2 rounded-full bg-black/20 backdrop-blur-md transition-colors z-[100] text-sm font-sans"
+          onClick={handleSkipVideo}
+        >
+          Skip Video
+        </button>
+      )}
     </>
   );
 }

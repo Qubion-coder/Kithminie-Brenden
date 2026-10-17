@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { motion } from 'motion/react';
 import { Music, VolumeX, Heart } from 'lucide-react';
 import { Hero } from './Hero';
@@ -19,6 +20,9 @@ interface InvitationContentProps {
   weddingDate: Date;
   isMusicPlaying: boolean;
   onToggleMusic: () => void;
+  introVideoRef: Ref<HTMLVideoElement>;
+  introMuted: boolean;
+  onIntroEnd: () => void;
 }
 
 export function InvitationContent({
@@ -29,16 +33,15 @@ export function InvitationContent({
   weddingDate,
   isMusicPlaying,
   onToggleMusic,
+  introVideoRef,
+  introMuted,
+  onIntroEnd,
 }: InvitationContentProps) {
-  if (!active) return null;
-
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
       className="font-sans text-stone-800 bg-brand-blush selection:bg-brand-plum/20"
     >
+      {active && (
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -52,8 +55,16 @@ export function InvitationContent({
           <VolumeX className="w-5 h-5 sm:w-6 sm:h-6" />
         )}
       </motion.button>
+      )}
 
-      <Hero event={eventParam} inviteeName={fullInviteeName} />
+      <Hero
+        event={eventParam}
+        inviteeName={fullInviteeName}
+        active={active}
+        videoRef={introVideoRef}
+        videoMuted={introMuted}
+        onVideoEnd={onIntroEnd}
+      />
 
       {fullInviteeName && (
         <DeferredMount active={active} delay={80}>
