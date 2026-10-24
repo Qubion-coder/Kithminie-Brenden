@@ -76,6 +76,40 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
   const isTouch = useIsTouchDevice();
   const useParallax = !reducedMotion && !isTouch;
 
+  // The intro is two clips: the envelope, then the scene. The second sits
+  // underneath, preloaded, and takes over when the first ends so there is
+  // no black gap; the hero then rests on its last frame.
+  const sceneRef = useRef<HTMLVideoElement>(null);
+  const [onScene, setOnScene] = useState(false);
+
+  const handleEnvelopeEnded = () => {
+    setOnScene(true);
+    const scene = sceneRef.current;
+    if (scene) {
+      scene.muted = videoMuted;
+      scene.currentTime = 0;
+      // Some mobile browsers block sound on a second clip; fall back to muted.
+      scene.play().catch(() => {
+        scene.muted = true;
+        scene.play().catch(console.error);
+      });
+    }
+  };
+
+  // Skipped: park the scene on its last frame instead of playing it.
+  useEffect(() => {
+    if (!active) return;
+    const scene = sceneRef.current;
+    if (!scene || scene.ended) return;
+    setOnScene(true);
+    scene.pause();
+    const toEnd = () => {
+      scene.currentTime = Math.max(0, scene.duration - 0.05);
+    };
+    if (Number.isFinite(scene.duration)) toEnd();
+    else scene.addEventListener('loadedmetadata', toEnd, { once: true });
+  }, [active]);
+
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 400]);
   const scale = useTransform(scrollY, [0, 800], [1, 1.1]);
@@ -87,15 +121,23 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
         className="absolute inset-0 z-0 origin-center"
         style={useParallax ? { y: y1, scale } : undefined}
       >
-        {/* Intro video; when it ends it rests on its last frame behind the text */}
         <video
-          ref={videoRef}
-          src="/gemini_generated_video_13ad019c.mp4"
-          className="w-full h-full object-cover object-center"
+          ref={sceneRef}
+          src="/intro-2-scene.mp4"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           muted={videoMuted}
           playsInline
           preload="auto"
           onEnded={onVideoEnd}
+        />
+        <video
+          ref={videoRef}
+          src="/intro-1-envelope.mp4"
+          className={`absolute inset-0 w-full h-full object-cover object-center ${onScene ? 'opacity-0' : ''}`}
+          muted={videoMuted}
+          playsInline
+          preload="auto"
+          onEnded={handleEnvelopeEnded}
         />
       </motion.div>
 
@@ -113,45 +155,36 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
         initial="hidden"
         animate={active ? 'show' : 'hidden'}
       >
-        <motion.h3 variants={item} className="font-serif text-[12px] sm:text-sm tracking-[0.25em] uppercase text-stone-800 mb-6 font-medium">
-          We Are Getting Married
-        </motion.h3>
+        <motion.p variants={item} className="font-serif italic text-base sm:text-xl leading-relaxed text-stone-800 max-w-md mb-6">
+          &ldquo;Set me as a seal upon your heart, a seal upon your arm, for love is strong as death&rdquo;
+        </motion.p>
         
-        <motion.h1 variants={letters} className="font-couple text-5xl sm:text-7xl text-stone-600 mb-10 leading-snug">
+        <motion.h1 variants={letters} className="font-couple text-[clamp(1.5rem,9.5vw,4.5rem)] whitespace-nowrap text-stone-600 mb-4 leading-snug">
           <Letters text="Kithminie " />
           <motion.span variants={letter} className="inline-block font-script text-brand-plum">&</motion.span>
           <Letters text=" Brenden" />
         </motion.h1>
 
-        <motion.p variants={item} className="font-serif text-xs sm:text-sm text-stone-800 max-w-sm tracking-[0.15em] leading-loose mb-10 uppercase font-semibold">
-          We request the pleasure of your company<br/>to celebrate our wedding on
-        </motion.p>
-
-        <motion.div variants={item} className="flex items-center justify-center gap-6 mb-2">
-          <div className="flex flex-col items-center border-t border-b border-stone-800 py-1.5 px-2">
-            <span className="font-serif text-xs sm:text-sm tracking-[0.2em] uppercase font-bold">December</span>
-          </div>
-          <span className="font-serif text-7xl sm:text-8xl text-stone-800 font-light leading-none -mt-4">10</span>
-          <div className="flex flex-col items-center border-t border-b border-stone-800 py-1.5 px-2">
-            <span className="font-serif text-xs sm:text-sm tracking-[0.2em] uppercase font-bold">Wednesday</span>
-          </div>
-        </motion.div>
-        <motion.div variants={item} className="font-serif text-xl sm:text-2xl tracking-[0.25em] text-stone-800 mb-10 font-medium">
-          2026
+        <motion.div variants={item} className="font-serif italic text-stone-700 text-sm sm:text-base leading-relaxed mb-8">
+          <p>Daughter of Mr &amp; Mrs Palihawadena</p>
+          <p className="font-script not-italic text-brand-plum text-xl leading-none my-1">&amp;</p>
+          <p>Son of Mr &amp; Mrs De Silva</p>
         </motion.div>
 
-        <motion.div variants={item} className="flex flex-col items-center gap-8 mt-2">
-          <div className="text-center">
-            <h3 className="font-display text-4xl sm:text-5xl text-stone-600 mb-2" style={{ transform: 'rotate(-2deg)' }}>Holy Mass</h3>
-            <p className="font-serif text-base sm:text-lg text-stone-800 font-medium tracking-wide">Time: 4:00 pm</p>
-            <p className="font-serif italic text-xl sm:text-2xl text-stone-700 tracking-wide mt-1">Venue: St Mary's Church, Colombo 04</p>
+        <motion.div variants={item} className="font-serif uppercase text-stone-800 text-[11px] sm:text-sm tracking-[0.25em] leading-loose font-semibold max-w-sm space-y-4">
+          <p>Together with their families</p>
+          <div>
+            <p>Request the honor of</p>
+            <p className="normal-case tracking-normal font-normal text-2xl sm:text-3xl font-display text-brand-plum mt-3 pb-1 border-b border-stone-800/40 inline-block min-w-[10rem]">
+              {inviteeName || 'your presence'}
+            </p>
           </div>
+          <p>As they exchange wedding vows</p>
+          <p>On</p>
+        </motion.div>
 
-          <div className="text-center">
-            <h3 className="font-display text-4xl sm:text-5xl text-stone-600 mb-2" style={{ transform: 'rotate(-2deg)' }}>Reception</h3>
-            <p className="font-serif text-base sm:text-lg text-stone-800 font-medium tracking-wide">Time: 7:00 pm</p>
-            <p className="font-serif text-xl sm:text-2xl text-stone-700 tracking-wide mt-1">Venue: Barnhouse, Panadura</p>
-          </div>
+        <motion.div variants={item} className="font-serif text-lg sm:text-2xl tracking-[0.15em] text-stone-800 font-medium mt-3">
+          10th December 2026
         </motion.div>
       </motion.div>
 

@@ -4,8 +4,9 @@ import { Toaster } from 'sonner';
 import { InvitationContent } from './components/InvitationContent';
 import { Admin } from './components/Admin';
 import { INVITATION_IMAGE_URLS, preloadImages } from './utils/preloadImages';
+import { readGuestFromLocation } from './utils/guest';
 
-const isAdminRoute = () => window.location.pathname === '/admin';
+const isAdminRoute = () => /^\/admin\/?$/.test(window.location.pathname);
 
 export default function App() {
   const [appState, setAppState] = useState<'initial' | 'playing' | 'invitation'>('initial');
@@ -15,11 +16,9 @@ export default function App() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const params = new URLSearchParams(window.location.search);
-  const titleParam = params.get('title') || '';
-  const nameParam = params.get('name') || '';
   const eventParam = params.get('event') || 'both';
 
-  const fullInviteeName = `${titleParam} ${nameParam}`.trim();
+  const fullInviteeName = isAdminRoute() ? '' : readGuestFromLocation(window.location);
   let eventLabel = 'Our Wedding Celebration';
   const weddingDate = new Date('2026-12-10T16:00:00');
 
@@ -34,7 +33,7 @@ export default function App() {
     const videoLink = document.createElement('link');
     videoLink.rel = 'preload';
     videoLink.as = 'video';
-    videoLink.href = '/gemini_generated_video_13ad019c.mp4';
+    videoLink.href = '/intro-1-envelope.mp4';
     document.head.appendChild(videoLink);
 
     return () => {
@@ -93,13 +92,9 @@ export default function App() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Jump to the last frame so the hero rests on it, then reveal the text.
+  // Stop the intro; the hero parks on the last frame and reveals the text.
   const handleSkipVideo = useCallback(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.pause();
-      if (Number.isFinite(video.duration)) video.currentTime = Math.max(0, video.duration - 0.05);
-    }
+    videoRef.current?.pause();
     handleTransitionVideoEnd();
   }, [handleTransitionVideoEnd]);
 

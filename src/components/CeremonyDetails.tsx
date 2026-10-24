@@ -31,7 +31,7 @@ export const CeremonyDetails: React.FC<CeremonyDetailsProps> = ({ event = 'both'
             </div>
 
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display text-stone-800 mb-8 leading-[1.1] drop-shadow-sm">
-                <>A Celebration of <br /><span className="italic font-light text-brand-plum">Tradition & Love</span></>
+                <>A Celebration of <br /><span className="italic font-light text-brand-plum">Everlasting Love</span></>
             </h2>
 
             <p className="text-stone-500/90 font-serif text-lg sm:text-xl leading-relaxed mb-16 max-w-lg">
@@ -73,6 +73,25 @@ export const CeremonyDetails: React.FC<CeremonyDetailsProps> = ({ event = 'both'
                 </div>
               </div>
 
+              {/* Reception */}
+              <div className="relative group">
+                <div className="absolute top-1/2 -translate-y-1/2 -left-[64px] sm:-left-[74px] w-12 h-12 bg-white rounded-full border border-brand-lavender/40 shadow-lg flex items-center justify-center group-hover:border-brand-plum group-hover:shadow-[0_4px_15px_rgba(176,137,104,0.3)] transition-all duration-500">
+                  <Sparkles className="w-5 h-5 text-brand-plum group-hover:scale-110 transition-transform duration-500" />
+                </div>
+                <div>
+                  <h4 className="font-serif text-2xl sm:text-3xl text-stone-800 mb-3 group-hover:text-brand-plum transition-colors duration-500">
+                    Reception
+                  </h4>
+                  <div className="space-y-1.5 text-stone-500/90 font-serif text-base sm:text-lg">
+                    <p>
+                      <span className="font-semibold text-stone-700">Time:</span> 07.00 PM
+                    </p>
+                    <p className="leading-relaxed">
+                      <span className="font-semibold text-stone-700">Venue:</span> Barnhouse,<br className="hidden sm:block" /> Panadura
+                    </p>
+                  </div>
+                </div>
+              </div>
 
             </div>
           </motion.div>

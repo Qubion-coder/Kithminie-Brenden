@@ -2,14 +2,12 @@ import type { Ref } from 'react';
 import { motion } from 'motion/react';
 import { Music, VolumeX, Heart } from 'lucide-react';
 import { Hero } from './Hero';
-import { CoupleDetails } from './CoupleDetails';
 import { CeremonyDetails } from './CeremonyDetails';
 import { Location } from './Location';
 
 import { Countdown } from './Countdown';
 import { RSVPForm } from './RSVPForm';
 
-import { InviteeBanner } from './InviteeBanner';
 import { DeferredMount } from './DeferredMount';
 
 interface InvitationContentProps {
@@ -66,20 +64,9 @@ export function InvitationContent({
         onVideoEnd={onIntroEnd}
       />
 
-      {fullInviteeName && (
-        <DeferredMount active={active} delay={80}>
-          <InviteeBanner inviteeName={fullInviteeName} eventLabel={eventLabel} />
-        </DeferredMount>
-      )}
-
-      <DeferredMount active={active} delay={120} minHeight="40vh">
-        <div className="py-28 sm:py-36 px-10 sm:px-20 lg:px-32 bg-[#FBFAF7] bg-[url('/35582a9af3fc2b22af5804ce2756caca.jpg')] bg-[length:100%_100%] bg-no-repeat relative overflow-hidden">
-          <CoupleDetails />
-        </div>
-      </DeferredMount>
 
       <DeferredMount active={active} delay={180} minHeight="40vh">
-        <div className="py-24 sm:py-32 bg-white relative overflow-hidden">
+        <div className="py-24 sm:py-32 px-6 sm:px-16 lg:px-28 bg-[#FBFAF7] bg-[url('/35582a9af3fc2b22af5804ce2756caca.jpg')] bg-[length:100%_100%] bg-no-repeat relative overflow-hidden">
           <CeremonyDetails event={eventParam} />
         </div>
       </DeferredMount>
