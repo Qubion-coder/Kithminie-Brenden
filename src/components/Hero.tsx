@@ -155,9 +155,15 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
         initial="hidden"
         animate={active ? 'show' : 'hidden'}
       >
-        <motion.p variants={item} className="font-serif italic text-base sm:text-xl leading-relaxed text-stone-800 max-w-md mb-6">
-          &ldquo;Set me as a seal upon your heart, a seal upon your arm, for love is strong as death&rdquo;
-        </motion.p>
+        {/* The quote is ~29.4em wide in Cormorant italic; size it to fill the width on one line. */}
+        <motion.figure variants={item} className="mb-6">
+          <blockquote className="font-serif italic text-[min(1.25rem,calc((100vw_-_2rem)/31))] whitespace-nowrap leading-relaxed text-stone-800">
+            &ldquo;Set me as a seal upon your heart, a seal upon your arm, for love is strong as death&rdquo;
+          </blockquote>
+          <figcaption className="mt-1 font-serif italic text-[min(1.25rem,calc((100vw_-_2rem)/31))] leading-relaxed text-stone-800">
+            Song of Solomon
+          </figcaption>
+        </motion.figure>
         
         <motion.h1 variants={letters} className="font-couple text-[clamp(1.5rem,9.5vw,4.5rem)] whitespace-nowrap text-stone-600 mb-4 leading-snug">
           <Letters text="Kithminie " />
