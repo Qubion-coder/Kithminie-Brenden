@@ -3,6 +3,12 @@ import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle, Loader2, Heart, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
+// The deployed URL is public anyway (it ships in the page), so it doubles as
+// the fallback when the env var is not set, e.g. on Vercel.
+const RSVP_SCRIPT_URL =
+  import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL ||
+  'https://script.google.com/macros/s/AKfycbwxhBSyflLJzgHXfFaN5Q6VhV-RbUnWHRWdjz6vGiJG_a1sjxUUrxnVTWpv2tYQhbo6/exec';
+
 interface RSVPFormProps {
   inviteeName?: string;
   eventName?: string;
@@ -20,7 +26,6 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
     thoughts: '',
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  // const scriptUrl = "https://script.google.com/macros/s/AKfycbxyOLqbPCF84tUg299jIyA0GuebtYFra-3C-CXxzE851QIQkOs1RRrqBKyYqP6NCSO-/exec";
 
   useEffect(() => {
     if (inviteeName) {
@@ -34,19 +39,24 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
 
     try {
 
-      const payload = new FormData();
-      payload.append('sheet', 'RSVP');
-      payload.append('fullName', formData.fullName);
-      payload.append('attendance', formData.attendance);
-      payload.append('guests', formData.attendance === 'yes' ? formData.guests : '0'); 
-      payload.append('thoughts', formData.thoughts);
-      payload.append('dietaryNotes', formData.thoughts); // Fallback for old sheet column
+      if (!RSVP_SCRIPT_URL) throw new Error('VITE_GOOGLE_APPS_SCRIPT_URL is not set');
 
-      // await fetch(scriptUrl, {
-      //   method: 'POST',
-      //   mode: 'no-cors',
-      //   body: payload,
-      // });
+      // Form-encoded so Apps Script receives the fields in e.parameter.
+      const payload = new URLSearchParams({
+        fullName: formData.fullName.trim(),
+        attendance: formData.attendance,
+        guests: formData.attendance === 'yes' ? formData.guests : '0',
+        thoughts: formData.thoughts.trim(),
+        link: window.location.href,
+      });
+
+      // Apps Script does not send CORS headers, so the response is opaque;
+      // a network failure still rejects and lands in the catch below.
+      await fetch(RSVP_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: payload,
+      });
 
       setStatus('success');
       toast.success('Your RSVP has been warmly received!');

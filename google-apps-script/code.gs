@@ -1,107 +1,56 @@
-const SPREADSHEET_ID = '1IYsTHUnfOIHGcwQvoTcjOc5X2wKZJDIrqxqxXtpVpZY';
+// Kithminie & Brenden wedding – saves RSVPs into the Google Sheet.
+// https://docs.google.com/spreadsheets/d/1cVGUcmnMWsgHjDN5KyS97ch4JkcbGhh1QrxaDoovpSo/edit
+const SPREADSHEET_ID = '1cVGUcmnMWsgHjDN5KyS97ch4JkcbGhh1QrxaDoovpSo';
+
+const SHEET_NAME = 'rsvp';
+const HEADERS = ['Timestamp', 'Guest Name', 'Attending', 'Seats', 'Message', 'Invitation Link'];
 
 function doPost(e) {
+  const lock = LockService.getScriptLock();
   try {
-    const payload = parsePayload_(e);
-    const sheetKey = String(payload.sheet || '').toUpperCase();
+    const p = (e && e.parameter) || {};
+    const attending = p.attendance !== 'no';
 
-    if (sheetKey !== 'RSVP' && sheetKey !== 'WISH') {
-      return jsonResponse_({ ok: false, error: 'Invalid sheet. Use RSVP or WISH.' });
-    }
-
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = getOrCreateSheet_(ss, sheetKey);
-
-    if (sheetKey === 'RSVP') {
-      ensureHeaders_(sheet, ['Timestamp', 'Full Name', 'Guests', 'Event', 'Dietary Notes']);
-      sheet.appendRow([
-        new Date(),
-        payload.fullName || '',
-        payload.guests || '',
-        payload.event || '',
-        payload.dietaryNotes || '',
-      ]);
-    } else {
-      ensureHeaders_(sheet, ['Timestamp', 'Name', 'Event', 'Message']);
-      sheet.appendRow([
-        new Date(),
-        payload.name || '',
-        payload.event || '',
-        payload.message || '',
-      ]);
-    }
+    lock.waitLock(10000); // keep simultaneous submissions from clashing
+    getSheet_().appendRow([
+      new Date(),
+      p.fullName || '',
+      attending ? 'Yes' : 'No',
+      attending ? Number(p.guests) || 1 : 0,
+      p.thoughts || '',
+      p.link || '',
+    ]);
 
     return jsonResponse_({ ok: true });
   } catch (error) {
-    return jsonResponse_({
-      ok: false,
-      error: String(error && error.message ? error.message : error),
-    });
+    return jsonResponse_({ ok: false, error: String(error && error.message ? error.message : error) });
+  } finally {
+    lock.releaseLock();
   }
 }
 
 function doGet() {
-  return jsonResponse_({
-    ok: true,
-    message: 'Wedding form endpoint is running.',
-  });
+  return jsonResponse_({ ok: true, message: 'Wedding RSVP endpoint is running.' });
 }
 
-function parsePayload_(e) {
-  const params = e && e.parameter ? e.parameter : {};
-
-  if (Object.keys(params).length > 0) {
-    return params;
-  }
-
-  const contents = e && e.postData && e.postData.contents ? e.postData.contents : '';
-  if (!contents) {
-    return {};
-  }
-
-  if (contents.indexOf('=') !== -1 && contents.indexOf('{') !== 0) {
-    return parseQueryString_(contents);
-  }
-
-  try {
-    return JSON.parse(contents);
-  } catch (_error) {
-    return {};
-  }
+/** Run once from the editor (select "setup" ▸ Run) to create the rsvp tab with headers. */
+function setup() {
+  getSheet_();
 }
 
-function parseQueryString_(query) {
-  const out = {};
-  const pairs = String(query).split('&');
+function getSheet_() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
 
-  for (let i = 0; i < pairs.length; i++) {
-    const part = pairs[i];
-    if (!part) continue;
-
-    const idx = part.indexOf('=');
-    const rawKey = idx >= 0 ? part.slice(0, idx) : part;
-    const rawValue = idx >= 0 ? part.slice(idx + 1) : '';
-    const key = decodeURIComponent(rawKey.replace(/\+/g, ' '));
-    const value = decodeURIComponent(rawValue.replace(/\+/g, ' '));
-
-    out[key] = value;
-  }
-
-  return out;
-}
-
-function getOrCreateSheet_(ss, name) {
-  let sheet = ss.getSheetByName(name);
-  if (!sheet) {
-    sheet = ss.insertSheet(name);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADERS);
+    sheet.getRange(1, 1, 1, HEADERS.length)
+      .setFontWeight('bold')
+      .setBackground('#F4E6CE');
+    sheet.setFrozenRows(1);
+    sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm');
   }
   return sheet;
-}
-
-function ensureHeaders_(sheet, headers) {
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(headers);
-  }
 }
 
 function jsonResponse_(data) {

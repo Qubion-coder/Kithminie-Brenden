@@ -30,12 +30,6 @@ export default function App() {
       if (!cancelled) setAssetsReady(true);
     });
 
-    const videoLink = document.createElement('link');
-    videoLink.rel = 'preload';
-    videoLink.as = 'video';
-    videoLink.href = '/intro-1-envelope.mp4';
-    document.head.appendChild(videoLink);
-
     return () => {
       cancelled = true;
     };
@@ -134,11 +128,16 @@ export default function App() {
       />
 
       {appState === 'initial' && (
-        <div
-          className="fixed inset-0 z-[100] cursor-pointer"
+        <button
+          type="button"
+          className="fixed inset-0 z-[100] cursor-pointer flex items-end justify-center pb-[18vh]"
           onClick={handleStartVideo}
-          aria-label="Start the invitation"
-        />
+          aria-label="Open the invitation"
+        >
+          <span className="animate-pulse px-7 py-3 rounded-full bg-white/70 backdrop-blur-md border border-brand-plum/40 shadow-lg font-serif uppercase tracking-[0.3em] text-xs sm:text-sm text-stone-700">
+            Tap to open
+          </span>
+        </button>
       )}
 
       {appState === 'playing' && (

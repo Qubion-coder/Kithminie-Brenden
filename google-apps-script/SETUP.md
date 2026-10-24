@@ -1,17 +1,22 @@
-1. Open your Google Sheet and create two tabs named RSVP and WISH.
-2. Open Extensions > Apps Script.
-3. Replace script content with code from google-apps-script/code.gs.
-4. Click Deploy > New deployment.
-5. Select type: Web app.
-6. Execute as: Me.
-7. Who has access: Anyone.
-8. Deploy and copy the Web App URL.
-9. In your project root, create a file named .env with:
+# RSVP → Google Sheet setup
 
-VITE_GOOGLE_APPS_SCRIPT_URL=YOUR_WEB_APP_URL
+Sheet: https://docs.google.com/spreadsheets/d/1cVGUcmnMWsgHjDN5KyS97ch4JkcbGhh1QrxaDoovpSo/edit
 
-10. Restart Vite dev server.
+1. Open the sheet ▸ Extensions ▸ Apps Script.
+2. Replace everything in Code.gs with google-apps-script/code.gs and save.
+3. In the function dropdown pick `setup` ▸ Run, and allow the permissions.
+   This creates the `rsvp` tab with bold, frozen headers:
+   Timestamp | Guest Name | Attending | Seats | Message | Invitation Link
+4. Deploy ▸ New deployment ▸ type: Web app
+   - Execute as: Me
+   - Who has access: Anyone
+5. Copy the Web app URL (ends in /exec).
+6. Put it in `.env` for local dev:
 
-Notes:
-- If you update Apps Script code later, redeploy a new version.
-- The frontend sends RSVP to sheet RSVP and wishes to sheet WISH.
+       VITE_GOOGLE_APPS_SCRIPT_URL=https://script.google.com/macros/s/XXXX/exec
+
+7. Add the same variable in Vercel ▸ Project ▸ Settings ▸ Environment Variables,
+   then redeploy (Vite bakes it in at build time).
+
+If you edit the script later: Deploy ▸ Manage deployments ▸ edit ▸ Version: New version,
+so the URL stays the same.

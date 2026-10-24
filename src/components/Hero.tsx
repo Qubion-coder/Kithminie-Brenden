@@ -123,7 +123,7 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
       >
         <video
           ref={sceneRef}
-          src="/intro-2-scene.mp4"
+          src="/intro-2-scene.mp4#t=0.001"
           className="absolute inset-0 w-full h-full object-cover object-center"
           muted={videoMuted}
           playsInline
@@ -132,7 +132,7 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
         />
         <video
           ref={videoRef}
-          src="/intro-1-envelope.mp4"
+          src="/intro-1-envelope.mp4#t=0.001"
           className={`absolute inset-0 w-full h-full object-cover object-center ${onScene ? 'opacity-0' : ''}`}
           muted={videoMuted}
           playsInline
