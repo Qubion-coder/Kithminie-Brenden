@@ -19,7 +19,6 @@ interface InvitationContentProps {
   isMusicPlaying: boolean;
   onToggleMusic: () => void;
   introVideoRef: Ref<HTMLVideoElement>;
-  introMuted: boolean;
   onIntroEnd: () => void;
 }
 
@@ -32,7 +31,6 @@ export function InvitationContent({
   isMusicPlaying,
   onToggleMusic,
   introVideoRef,
-  introMuted,
   onIntroEnd,
 }: InvitationContentProps) {
   return (
@@ -60,7 +58,6 @@ export function InvitationContent({
         inviteeName={fullInviteeName}
         active={active}
         videoRef={introVideoRef}
-        videoMuted={introMuted}
         onVideoEnd={onIntroEnd}
       />
 

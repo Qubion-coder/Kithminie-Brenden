@@ -75,7 +75,6 @@ export default function App() {
     setAppState('playing');
     handleMusicStart();
     if (videoRef.current) {
-      videoRef.current.muted = false; // ensure it's unmuted
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch(console.error);
     }
@@ -123,7 +122,6 @@ export default function App() {
         isMusicPlaying={isMusicPlaying}
         onToggleMusic={toggleMusic}
         introVideoRef={videoRef}
-        introMuted={appState === 'initial'}
         onIntroEnd={handleTransitionVideoEnd}
       />
 

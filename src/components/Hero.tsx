@@ -9,7 +9,6 @@ interface HeroProps {
   active?: boolean;
   /** The intro video plays here as the hero background and stays on its last frame. */
   videoRef?: Ref<HTMLVideoElement>;
-  videoMuted?: boolean;
   onVideoEnd?: () => void;
 }
 
@@ -70,7 +69,7 @@ function useIsTouchDevice() {
   return touch;
 }
 
-export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active = true, videoRef, videoMuted = true, onVideoEnd }) => {
+export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active = true, videoRef, onVideoEnd }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const isTouch = useIsTouchDevice();
@@ -86,13 +85,8 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
     setOnScene(true);
     const scene = sceneRef.current;
     if (scene) {
-      scene.muted = videoMuted;
       scene.currentTime = 0;
-      // Some mobile browsers block sound on a second clip; fall back to muted.
-      scene.play().catch(() => {
-        scene.muted = true;
-        scene.play().catch(console.error);
-      });
+      scene.play().catch(console.error);
     }
   };
 
@@ -125,7 +119,7 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
           ref={sceneRef}
           src="/intro-2-scene.mp4#t=0.001"
           className="absolute inset-0 w-full h-full object-cover object-center"
-          muted={videoMuted}
+          muted
           playsInline
           preload="auto"
           onEnded={onVideoEnd}
@@ -134,7 +128,7 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
           ref={videoRef}
           src="/intro-1-envelope.mp4#t=0.001"
           className={`absolute inset-0 w-full h-full object-cover object-center ${onScene ? 'opacity-0' : ''}`}
-          muted={videoMuted}
+          muted
           playsInline
           preload="auto"
           onEnded={handleEnvelopeEnded}
