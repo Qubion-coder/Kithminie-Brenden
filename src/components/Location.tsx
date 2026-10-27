@@ -14,7 +14,7 @@ export const Location: React.FC<LocationProps> = ({ event = 'both' }) => {
       city: "Colombo 04",
       quote: `"A beautiful and sacred place where we will unite."`,
       liveLocationUrl: "https://maps.app.goo.gl/26dmu5eyEvo5YCsV6",
-      imageUrl: "/st-marys-church.png",
+      imageUrl: "/st-marys-church.jpg",
       label: "Holy Mass"
     },
     {

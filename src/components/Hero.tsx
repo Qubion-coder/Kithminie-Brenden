@@ -159,16 +159,35 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
           </figcaption>
         </motion.figure>
         
-        <motion.h1 variants={letters} className="font-couple text-[clamp(1.5rem,9.5vw,4.5rem)] whitespace-nowrap text-stone-600 mb-4 leading-snug">
-          <Letters text="Kithminie " />
-          <motion.span variants={letter} className="inline-block font-script text-brand-plum">&</motion.span>
-          <Letters text=" Brenden" />
-        </motion.h1>
+        {/* Bride | & | Groom, each name with their parents beneath */}
+        <h1 className="sr-only">Kithminie &amp; Brenden</h1>
+        <motion.div
+          variants={letters}
+          aria-hidden="true"
+          className="grid grid-cols-[1fr_auto_1fr] items-start gap-x-2 sm:gap-x-8 w-full max-w-3xl mb-8"
+        >
+          <div className="flex flex-col items-center">
+            <Letters text="Kithminie" className="font-couple text-[clamp(1.5rem,8.5vw,4.5rem)] whitespace-nowrap text-stone-800 leading-snug" />
+            <motion.p variants={item} className="mt-2 font-serif uppercase text-stone-800 text-[clamp(0.5rem,2.5vw,1rem)] tracking-[0.04em] leading-snug whitespace-nowrap">
+              <span className="block">Daughter of Mr &amp; Mrs</span>
+              <span className="block">Palihawadena</span>
+            </motion.p>
+          </div>
 
-        <motion.div variants={item} className="font-serif italic text-stone-700 text-sm sm:text-base leading-relaxed mb-8">
-          <p>Daughter of Mr &amp; Mrs Palihawadena</p>
-          <p className="font-script not-italic text-brand-plum text-xl leading-none my-1">&amp;</p>
-          <p>Son of Mr &amp; Mrs De Silva</p>
+          <motion.span
+            variants={letter}
+            className="font-script text-brand-plum text-[clamp(2rem,10vw,4.5rem)] leading-none self-start mt-[0.6em]"
+          >
+            &amp;
+          </motion.span>
+
+          <div className="flex flex-col items-center">
+            <Letters text="Brenden" className="font-couple text-[clamp(1.5rem,8.5vw,4.5rem)] whitespace-nowrap text-stone-800 leading-snug" />
+            <motion.p variants={item} className="mt-2 font-serif uppercase text-stone-800 text-[clamp(0.5rem,2.5vw,1rem)] tracking-[0.04em] leading-snug whitespace-nowrap">
+              <span className="block">Son of Mr &amp; Mrs</span>
+              <span className="block">De Silva</span>
+            </motion.p>
+          </div>
         </motion.div>
 
         <motion.div variants={item} className="font-serif uppercase text-stone-800 text-[11px] sm:text-sm tracking-[0.25em] leading-loose font-semibold max-w-sm space-y-4">
