@@ -75,33 +75,25 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
   const isTouch = useIsTouchDevice();
   const useParallax = !reducedMotion && !isTouch;
 
-  // The intro is two clips: the envelope, then the scene. The second sits
-  // underneath, preloaded, and takes over when the first ends so there is
-  // no black gap; the hero then rests on its last frame.
-  const sceneRef = useRef<HTMLVideoElement>(null);
-  const [onScene, setOnScene] = useState(false);
-
-  const handleEnvelopeEnded = () => {
-    setOnScene(true);
-    const scene = sceneRef.current;
-    if (scene) {
-      scene.currentTime = 0;
-      scene.play().catch(console.error);
-    }
+  // App starts playback through videoRef; keep our own handle for skipping.
+  const introRef = useRef<HTMLVideoElement | null>(null);
+  const setIntroRef = (el: HTMLVideoElement | null) => {
+    introRef.current = el;
+    if (typeof videoRef === 'function') videoRef(el);
+    else if (videoRef) (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
   };
 
-  // Skipped: park the scene on its last frame instead of playing it.
+  // Skipped: park the video on its last frame instead of playing on.
   useEffect(() => {
     if (!active) return;
-    const scene = sceneRef.current;
-    if (!scene || scene.ended) return;
-    setOnScene(true);
-    scene.pause();
+    const video = introRef.current;
+    if (!video || video.ended) return;
+    video.pause();
     const toEnd = () => {
-      scene.currentTime = Math.max(0, scene.duration - 0.05);
+      video.currentTime = Math.max(0, video.duration - 0.05);
     };
-    if (Number.isFinite(scene.duration)) toEnd();
-    else scene.addEventListener('loadedmetadata', toEnd, { once: true });
+    if (Number.isFinite(video.duration)) toEnd();
+    else video.addEventListener('loadedmetadata', toEnd, { once: true });
   }, [active]);
 
   const { scrollY } = useScroll();
@@ -115,23 +107,15 @@ export const Hero: React.FC<HeroProps> = ({ event = 'both', inviteeName, active 
         className="absolute inset-0 z-0 origin-center"
         style={useParallax ? { y: y1, scale } : undefined}
       >
+        {/* Intro video; when it ends it rests on its last frame behind the text */}
         <video
-          ref={sceneRef}
-          src="/intro-2-scene.mp4#t=0.001"
+          ref={setIntroRef}
+          src="/intro-video.mp4#t=0.001"
           className="absolute inset-0 w-full h-full object-cover object-center"
           muted
           playsInline
           preload="auto"
           onEnded={onVideoEnd}
-        />
-        <video
-          ref={videoRef}
-          src="/intro-1-envelope.mp4#t=0.001"
-          className={`absolute inset-0 w-full h-full object-cover object-center ${onScene ? 'opacity-0' : ''}`}
-          muted
-          playsInline
-          preload="auto"
-          onEnded={handleEnvelopeEnded}
         />
       </motion.div>
 

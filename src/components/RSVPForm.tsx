@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle, Loader2, Heart, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { readTableFromLocation } from '../utils/guest';
 
 // The deployed URL is public anyway (it ships in the page), so it doubles as
 // the fallback when the env var is not set, e.g. on Vercel.
@@ -18,6 +19,7 @@ interface RSVPFormProps {
 export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName = 'the celebration', eventParam = 'both' }) => {
   const searchParams = new URLSearchParams(window.location.search);
   const guestsParam = searchParams.get('guests') || '1';
+  const tableNumber = readTableFromLocation(window.location);
 
   const [formData, setFormData] = useState({
     fullName: inviteeName,
@@ -99,11 +101,21 @@ export const RSVPForm: React.FC<RSVPFormProps> = ({ inviteeName = '', eventName 
           </h2>
 
           <p className="text-stone-500/90 font-serif text-base sm:text-lg leading-relaxed mb-6">
-            {inviteeName
-              ? `Dear ${inviteeName}, your presence at ${eventName} means the world to us. Please kindly let us know if you will be able to join our celebration.`
-              : `Your presence means the world to us. Please kindly let us know if you will be able to join our celebration.`
-            }
+            We would be delighted by your presence at our wedding.
+            <br />
+            Kindly confirm your availability by <span className="text-stone-700 font-semibold">10th November 2026</span>.
           </p>
+
+          {tableNumber && (
+            <div className="inline-flex flex-col items-center px-8 py-4 mb-6 rounded-[1.5rem] bg-white/70 border border-brand-plum/30 shadow-sm">
+              <span className="font-serif uppercase tracking-[0.3em] text-[10px] sm:text-[11px] font-semibold text-brand-plum">
+                You are seated at
+              </span>
+              <span className="font-serif font-medium tracking-[0.05em] text-4xl sm:text-5xl text-stone-800 leading-tight">
+                Table {tableNumber}
+              </span>
+            </div>
+          )}
 
           <div className="w-12 h-[1px] bg-brand-lavender/50 mx-auto lg:mx-0" />
         </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Copy, Check, Sparkles, User, Link as LinkIcon, ArrowLeft, MessageCircle } from 'lucide-react';
+import { Copy, Check, Sparkles, User, Link as LinkIcon, ArrowLeft, MessageCircle, Armchair } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   GUEST_PREFIXES,
@@ -14,6 +14,7 @@ import {
 interface Generated {
   link: string;
   displayName: string;
+  table: string;
   message: string;
 }
 
@@ -38,6 +39,7 @@ async function copyText(text: string): Promise<void> {
 export const Admin: React.FC = () => {
   const [prefix, setPrefix] = useState<GuestPrefix>('mr');
   const [guestName, setGuestName] = useState('');
+  const [table, setTable] = useState('');
   const [generated, setGenerated] = useState<Generated | null>(null);
   const [copied, setCopied] = useState<'link' | 'message' | null>(null);
 
@@ -50,9 +52,9 @@ export const Admin: React.FC = () => {
       return;
     }
 
-    const link = buildInvitationLink(window.location.origin, prefix, guestName);
+    const link = buildInvitationLink(window.location.origin, prefix, guestName, table);
     const displayName = formatDisplayName(prefix, guestName);
-    setGenerated({ link, displayName, message: buildInvitationMessage(displayName, link) });
+    setGenerated({ link, displayName, table: table.trim(), message: buildInvitationMessage(displayName, link) });
     setCopied(null);
     toast.success('Invitation link generated!');
   };
@@ -64,6 +66,10 @@ export const Admin: React.FC = () => {
   };
   const updateName = (value: string) => {
     setGuestName(value);
+    setGenerated(null);
+  };
+  const updateTable = (value: string) => {
+    setTable(value);
     setGenerated(null);
   };
 
@@ -161,6 +167,23 @@ export const Admin: React.FC = () => {
                 )}
               </div>
 
+              <div>
+                <label htmlFor="table" className="block text-xs uppercase tracking-[0.2em] font-bold text-stone-500 mb-3 flex items-center gap-2 ml-1">
+                  <Armchair className="w-4 h-4 text-brand-plum" />
+                  Table Number <span className="normal-case tracking-normal font-normal text-stone-400">(optional)</span>
+                </label>
+                <input
+                  id="table"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
+                  placeholder="e.g. 5"
+                  value={table}
+                  onChange={(e) => updateTable(e.target.value)}
+                  className="w-full bg-white px-6 py-4 rounded-full border border-stone-200/80 focus:ring-2 focus:ring-brand-lavender/30 focus:border-brand-plum/40 outline-none transition-all font-serif text-lg shadow-inner text-stone-800 placeholder:text-stone-400"
+                />
+              </div>
+
               <button
                 type="submit"
                 className="w-full bg-stone-800 text-brand-rose py-5 rounded-full font-sans tracking-[0.3em] font-bold text-xs uppercase hover:bg-stone-900 transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] active:scale-[0.98] flex items-center justify-center gap-3"
@@ -197,6 +220,25 @@ export const Admin: React.FC = () => {
                 </p>
               )}
             </div>
+
+            {generated && (
+              <div>
+                <h3 className="font-serif text-2xl text-stone-800 mb-3 flex items-center gap-2">
+                  <Armchair className="w-5 h-5 text-brand-plum" />
+                  Table Preview
+                </h3>
+                {generated.table ? (
+                  <div className="text-center px-8 py-4 rounded-[1.5rem] bg-stone-50 border border-brand-plum/30">
+                    <p className="font-serif uppercase tracking-[0.3em] text-[11px] font-semibold text-brand-plum">You are seated at</p>
+                    <p className="font-serif font-medium tracking-[0.05em] text-4xl text-stone-800 leading-tight">Table {generated.table}</p>
+                  </div>
+                ) : (
+                  <p className="p-4 rounded-2xl border-2 border-dashed border-stone-200 text-stone-400 font-serif italic">
+                    No table assigned; the RSVP section won't show a table.
+                  </p>
+                )}
+              </div>
+            )}
 
             {generated && (
               <div>

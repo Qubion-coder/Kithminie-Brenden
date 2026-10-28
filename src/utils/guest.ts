@@ -35,11 +35,22 @@ export function formatDisplayName(prefix: GuestPrefix, name: string): string {
   }
 }
 
-/** {origin}/{guestName}, with the prefix as ?p= unless it adds nothing ("Dear"). */
-export function buildInvitationLink(origin: string, prefix: GuestPrefix, name: string): string {
+/**
+ * {origin}/{guestName}, with the prefix as ?p= unless it adds nothing ("Dear")
+ * and the table number as ?t= when one is assigned.
+ */
+export function buildInvitationLink(origin: string, prefix: GuestPrefix, name: string, table = ''): string {
   const trimmed = name.trim().replace(/\s+/g, ' ');
-  const url = `${origin}/${encodeURIComponent(trimmed)}`;
-  return prefix === 'dear' ? url : `${url}?p=${prefix}`;
+  const params = new URLSearchParams();
+  if (prefix !== 'dear') params.set('p', prefix);
+  if (table.trim()) params.set('t', table.trim());
+  const query = params.toString();
+  return `${origin}/${encodeURIComponent(trimmed)}${query ? `?${query}` : ''}`;
+}
+
+/** The guest's table number from ?t=, or '' when none was assigned. */
+export function readTableFromLocation(location: Location): string {
+  return (new URLSearchParams(location.search).get('t') || '').trim();
 }
 
 export function buildInvitationMessage(displayName: string, link: string): string {
