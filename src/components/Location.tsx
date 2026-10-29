@@ -12,7 +12,8 @@ export const Location: React.FC<LocationProps> = ({ event = 'both' }) => {
       id: 'ceremony',
       name: "St. Mary's Church",
       city: "Colombo 04",
-      quote: `"A beautiful and sacred place where we will unite."`,
+      quote: `The beautiful and sacred place where two hearts become one.`,
+      headingWord: "Unite",
       liveLocationUrl: "https://maps.app.goo.gl/26dmu5eyEvo5YCsV6",
       imageUrl: "/st-marys-church.jpg",
       label: "Holy Mass"
@@ -21,7 +22,8 @@ export const Location: React.FC<LocationProps> = ({ event = 'both' }) => {
       id: 'reception',
       name: "Barnhouse",
       city: "Panadura",
-      quote: `"Join us for an evening of celebration, dining, and dancing."`,
+      quote: `Join us for an evening of celebration, dining, and dancing.`,
+      headingWord: "Celebrate",
       liveLocationUrl: "https://maps.app.goo.gl/hieMUF8KFAcjMP7s9",
       imageUrl: "https://barnhouse.lk/wp-content/uploads/2024/06/IMG_0094-1.jpg",
       label: "The Reception"
@@ -62,7 +64,7 @@ export const Location: React.FC<LocationProps> = ({ event = 'both' }) => {
 
                     <h2 className="text-5xl sm:text-6xl font-display text-stone-800 mb-6 leading-tight drop-shadow-sm">
                       Where We <br />
-                      <span className="italic font-light text-brand-plum">Celebrate</span>
+                      <span className="italic font-light text-brand-plum">{venue.headingWord}</span>
                     </h2>
 
                     <motion.div 
