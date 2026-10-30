@@ -3,10 +3,14 @@ import { Toaster } from 'sonner';
 
 import { InvitationContent } from './components/InvitationContent';
 import { Admin } from './components/Admin';
+import { Memory } from './components/Memory';
 import { INVITATION_IMAGE_URLS, preloadImages } from './utils/preloadImages';
 import { readGuestFromLocation } from './utils/guest';
 
 const isAdminRoute = () => /^\/admin\/?$/.test(window.location.pathname);
+const isMemoryRoute = () => /^\/memory\/?$/i.test(window.location.pathname);
+/** Pages that skip the invitation intro entirely. */
+const isStandaloneRoute = () => isAdminRoute() || isMemoryRoute();
 
 export default function App() {
   const [appState, setAppState] = useState<'initial' | 'playing' | 'invitation'>('initial');
@@ -18,12 +22,12 @@ export default function App() {
   const params = new URLSearchParams(window.location.search);
   const eventParam = params.get('event') || 'both';
 
-  const fullInviteeName = isAdminRoute() ? '' : readGuestFromLocation(window.location);
+  const fullInviteeName = isStandaloneRoute() ? '' : readGuestFromLocation(window.location);
   let eventLabel = 'Our Wedding Celebration';
   const weddingDate = new Date('2026-12-10T16:00:00');
 
   useEffect(() => {
-    if (isAdminRoute()) return;
+    if (isStandaloneRoute()) return;
 
     let cancelled = false;
     preloadImages([...INVITATION_IMAGE_URLS]).then(() => {
@@ -93,18 +97,18 @@ export default function App() {
 
   // Keep the page still until the intro video is done.
   useEffect(() => {
-    if (isAdminRoute()) return;
+    if (isStandaloneRoute()) return;
     document.body.style.overflow = appState === 'invitation' ? '' : 'hidden';
     return () => {
       document.body.style.overflow = '';
     };
   }, [appState]);
 
-  if (isAdminRoute()) {
+  if (isStandaloneRoute()) {
     return (
       <>
         <Toaster position="top-center" />
-        <Admin />
+        {isAdminRoute() ? <Admin /> : <Memory />}
       </>
     );
   }

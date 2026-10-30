@@ -20,3 +20,16 @@ Sheet: https://docs.google.com/spreadsheets/d/1cVGUcmnMWsgHjDN5KyS97ch4JkcbGhh1Q
 
 If you edit the script later: Deploy ▸ Manage deployments ▸ edit ▸ Version: New version,
 so the URL stays the same.
+
+## Memory photo uploads (/memory)
+
+Guest photos from /memory are saved to
+https://drive.google.com/drive/folders/1NEYxpebbgWwZcvLFKao8xbzHBe6_SjNZ
+(named "date time - original file name"); nothing is written to the sheet.
+
+The Google account that owns the script must be able to edit that folder.
+After pasting the updated code.gs:
+
+1. Run `setup` again and accept the new Google Drive permission.
+2. Deploy ▸ Manage deployments ▸ ✏️ edit ▸ Version: **New version** ▸ Deploy.
+   (Editing the existing deployment keeps the same /exec URL.)

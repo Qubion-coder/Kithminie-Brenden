@@ -4,11 +4,7 @@ import { CheckCircle, Loader2, Heart, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { readTableFromLocation } from '../utils/guest';
 
-// The deployed URL is public anyway (it ships in the page), so it doubles as
-// the fallback when the env var is not set, e.g. on Vercel.
-const RSVP_SCRIPT_URL =
-  import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL ||
-  'https://script.google.com/macros/s/AKfycbwxhBSyflLJzgHXfFaN5Q6VhV-RbUnWHRWdjz6vGiJG_a1sjxUUrxnVTWpv2tYQhbo6/exec';
+import { APPS_SCRIPT_URL as RSVP_SCRIPT_URL } from '../utils/appsScript';
 
 interface RSVPFormProps {
   inviteeName?: string;
