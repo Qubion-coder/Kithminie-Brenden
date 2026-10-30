@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Camera, CheckCircle, Heart, ImagePlus, Loader2, Upload, X, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
-import { APPS_SCRIPT_URL } from '../utils/appsScript';
+import { MEMORY_SCRIPT_URL } from '../utils/appsScript';
 import { WEDDING } from '../utils/guest';
 
 type Status = 'ready' | 'uploading' | 'done' | 'error';
@@ -64,7 +64,7 @@ async function uploadOne(file: File): Promise<void> {
 
   // Form-encoded keeps this a "simple" request (no CORS preflight), and Apps
   // Script's JSON response is readable, so we can confirm each upload.
-  const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body });
+  const res = await fetch(MEMORY_SCRIPT_URL, { method: 'POST', body });
   const json = await res.json().catch(() => null);
   if (!json?.ok) throw new Error(json?.error || 'Upload failed.');
 }
